@@ -5,63 +5,63 @@ const genres = [
         name: 'Dance',
         icon: 'fa-compact-disc',
         color: '#FF6B6B',
-        image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     },
     {
         id: 'cumbia',
         name: 'Cumbia',
         icon: 'fa-guitar',
         color: '#4ECDC4',
-        image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     },
     {
         id: 'reggaeton',
         name: 'Reggaeton',
         icon: 'fa-fire',
         color: '#FFD166',
-        image: 'https://images.unsplash.com/photo-1519281682544-5f37c5ab38f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1519281682544-5f37c5ab38f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     },
     {
         id: 'folklore',
         name: 'Folklore',
         icon: 'fa-mountain',
         color: '#06D6A0',
-        image: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     },
     {
         id: 'gym',
         name: 'Gym',
         icon: 'fa-dumbbell',
         color: '#118AB2',
-        image: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     },
     {
         id: 'lentos',
         name: 'Lentos',
         icon: 'fa-heart',
         color: '#EF476F',
-        image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     },
     {
         id: 'hiphop',
         name: 'Hip Hop',
         icon: 'fa-microphone',
         color: '#7209B7',
-        image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     },
     {
         id: 'rock',
         name: 'Rock',
         icon: 'fa-music',
         color: '#F8961E',
-        image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     },
     {
         id: 'top100',
         name: 'Top 100',
         icon: 'fa-trophy',
         color: '#FFD700',
-        image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80'
+        image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
     }
 ];
 
@@ -113,6 +113,10 @@ let audioPlayer = new Audio();
 let isGridView = true;
 let isSearching = false;
 let currentSearchQuery = '';
+let isViewingFavorites = false;
+
+// SISTEMA DE FAVORITOS: Cargar favoritos guardados
+let favoriteSongs = JSON.parse(localStorage.getItem('spotifyFavorites')) || [];
 
 // SOLUCIÓN: Función para obtener audio compatible con CORS
 function getCompatibleAudioStream(url) {
@@ -153,16 +157,95 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
 });
 
-// Renderizar la barra de géneros
+// SISTEMA DE FAVORITOS: Guardar favoritos en localStorage
+function saveFavorites() {
+    localStorage.setItem('spotifyFavorites', JSON.stringify(favoriteSongs));
+}
+
+// SISTEMA DE FAVORITOS: Verificar si una canción es favorita
+function isFavorite(songId) {
+    return favoriteSongs.includes(songId);
+}
+
+// SISTEMA DE FAVORITOS: Agregar/remover favorito
+function toggleFavorite(songId) {
+    const index = favoriteSongs.indexOf(songId);
+    
+    if (index === -1) {
+        // Agregar a favoritos
+        favoriteSongs.push(songId);
+        showNotification("Añadido a Favoritos ❤️", "success");
+    } else {
+        // Remover de favoritos
+        favoriteSongs.splice(index, 1);
+        showNotification("Removido de Favoritos", "info");
+    }
+    
+    // Guardar en localStorage
+    saveFavorites();
+    
+    // Actualizar UI si estamos viendo favoritos
+    if (isViewingFavorites) {
+        loadFavorites();
+    } else if (isSearching) {
+        performSearch(currentSearchQuery);
+    } else {
+        renderSongs(getCurrentSongList());
+    }
+}
+
+// SISTEMA DE FAVORITOS: Cargar vista de favoritos
+function loadFavorites() {
+    isViewingFavorites = true;
+    isSearching = false;
+    currentSearchQuery = '';
+    searchInput.value = '';
+    clearSearchBtn.classList.remove('visible');
+    searchResultsInfo.classList.add('hidden');
+    
+    // Obtener canciones favoritas
+    const favoriteSongsList = songs.filter(song => favoriteSongs.includes(song.id));
+    
+    // CORRECCIÓN: Actualizar el banner para Favoritos
+    currentGenreName.textContent = 'Tus Favoritos';
+    currentGenreCount.textContent = `${favoriteSongsList.length} canciones`;
+    genreBanner.style.background = `
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80') center/cover
+    `;
+    genreBannerIcon.innerHTML = `<i class="fas fa-heart"></i>`;
+    genreBannerIcon.style.color = '#FFFFFF';
+    
+    // Renderizar canciones favoritas
+    renderSongs(favoriteSongsList);
+}
+
+// SISTEMA DE FAVORITOS: Obtener lista actual de canciones según el contexto
+function getCurrentSongList() {
+    if (isViewingFavorites) {
+        return songs.filter(song => favoriteSongs.includes(song.id));
+    } else if (isSearching) {
+        return songs.filter(song => 
+            song.title.toLowerCase().includes(currentSearchQuery) ||
+            song.artist.toLowerCase().includes(currentSearchQuery) ||
+            song.genre.toLowerCase().includes(currentSearchQuery)
+        );
+    } else {
+        return songs.filter(song => song.genre === currentGenre);
+    }
+}
+
+// Renderizar la barra de géneros CON FAVORITOS
 function renderGenres() {
     genresSidebar.innerHTML = '';
     
+    // Renderizar géneros normales
     genres.forEach(genre => {
         const genreElement = document.createElement('div');
-        genreElement.className = `genre-item ${genre.id === currentGenre ? 'active' : ''}`;
+        genreElement.className = `genre-item ${genre.id === currentGenre && !isViewingFavorites ? 'active' : ''}`;
         genreElement.dataset.genre = genre.id;
-        genreElement.style.color = genre.id === currentGenre ? genre.color : '';
-        genreElement.style.backgroundColor = genre.id === currentGenre ? '#282828' : '';
+        genreElement.style.color = genre.id === currentGenre && !isViewingFavorites ? genre.color : '';
+        genreElement.style.backgroundColor = genre.id === currentGenre && !isViewingFavorites ? '#282828' : '';
         
         genreElement.innerHTML = `
             <i class="fas ${genre.icon} genre-icon"></i>
@@ -173,17 +256,35 @@ function renderGenres() {
             const selectedGenre = this.dataset.genre;
             selectGenre(selectedGenre);
             isSearching = false;
+            isViewingFavorites = false;
             searchResultsInfo.classList.add('hidden');
         });
         
         genresSidebar.appendChild(genreElement);
     });
+    
+    // SISTEMA DE FAVORITOS: Agregar botón de Favoritos
+    const favoritesElement = document.createElement('div');
+    favoritesElement.className = `genre-item favorites ${isViewingFavorites ? 'active' : ''}`;
+    favoritesElement.dataset.genre = 'favorites';
+    
+    favoritesElement.innerHTML = `
+        <i class="fas fa-heart genre-icon"></i>
+        <span class="genre-name">Favoritos</span>
+    `;
+    
+    favoritesElement.addEventListener('click', function() {
+        loadFavorites();
+    });
+    
+    genresSidebar.appendChild(favoritesElement);
 }
 
-// Seleccionar un género
+// CORRECCIÓN PRINCIPAL: Seleccionar un género CON IMAGEN
 function selectGenre(genreId) {
     currentGenre = genreId;
     isSearching = false;
+    isViewingFavorites = false;
     currentSearchQuery = '';
     searchInput.value = '';
     clearSearchBtn.classList.remove('visible');
@@ -193,7 +294,7 @@ function selectGenre(genreId) {
         const genre = genres.find(g => g.id === item.dataset.genre);
         if (item.dataset.genre === genreId) {
             item.classList.add('active');
-            item.style.color = genre.color;
+            item.style.color = genre ? genre.color : '';
             item.style.backgroundColor = '#282828';
         } else {
             item.classList.remove('active');
@@ -202,39 +303,47 @@ function selectGenre(genreId) {
         }
     });
     
+    // Actualizar botón de Favoritos
+    document.querySelector('.genre-item.favorites').classList.remove('active');
+    
     // Cargar el género seleccionado
     loadGenre(genreId);
 }
 
-// Cargar un género y sus canciones
+// CORRECCIÓN PRINCIPAL: Cargar un género y sus canciones CON IMAGEN VISIBLE
 function loadGenre(genreId) {
     const genre = genres.find(g => g.id === genreId);
     if (!genre) return;
     
-    // Actualizar el banner
+    // CORRECCIÓN: Actualizar el banner CON IMAGEN DE FONDO
     currentGenreName.textContent = genre.name;
-    genreBanner.style.background = `linear-gradient(135deg, ${genre.color}40, ${genre.color}80)`;
-    genreBannerIcon.innerHTML = `<i class="fas ${genre.icon}"></i>`;
-    genreBannerIcon.style.color = genre.color;
+    currentGenreCount.textContent = `${songs.filter(s => s.genre === genreId).length} canciones`;
     
-    // Filtrar canciones por género
-    const genreSongs = songs.filter(song => song.genre === genreId);
-    currentGenreCount.textContent = `${genreSongs.length} canciones`;
+    // ESTA ES LA LÍNEA IMPORTANTE: Usar la imagen como fondo
+    genreBanner.style.background = `
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('${genre.image}') center/cover
+    `;
+    
+    genreBannerIcon.innerHTML = `<i class="fas ${genre.icon}"></i>`;
+    genreBannerIcon.style.color = '#FFFFFF'; // Color blanco para mejor contraste
     
     // Renderizar canciones
-    renderSongs(genreSongs);
+    renderSongs(songs.filter(song => song.genre === genreId));
 }
 
 // Función de búsqueda
 function performSearch(query) {
     if (!query.trim()) {
         isSearching = false;
+        isViewingFavorites = false;
         searchResultsInfo.classList.add('hidden');
         loadGenre(currentGenre);
         return;
     }
     
     isSearching = true;
+    isViewingFavorites = false;
     currentSearchQuery = query.toLowerCase();
     
     // Filtrar canciones
@@ -248,12 +357,22 @@ function performSearch(query) {
     searchResultsInfo.classList.remove('hidden');
     searchResultsCount.textContent = `${searchResults.length} canciones encontradas`;
     
-    // Actualizar el banner para búsqueda
+    // CORRECCIÓN: Actualizar el banner para búsqueda
     currentGenreName.textContent = `Búsqueda: "${query}"`;
     currentGenreCount.textContent = `${searchResults.length} resultados`;
-    genreBanner.style.background = `linear-gradient(135deg, #1DB95440, #1DB95480)`;
+    genreBanner.style.background = `
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+        url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80') center/cover
+    `;
     genreBannerIcon.innerHTML = `<i class="fas fa-search"></i>`;
-    genreBannerIcon.style.color = '#1DB954';
+    genreBannerIcon.style.color = '#FFFFFF';
+    
+    // Actualizar barra lateral
+    document.querySelectorAll('.genre-item').forEach(item => {
+        item.classList.remove('active');
+        item.style.color = '';
+        item.style.backgroundColor = '';
+    });
     
     // Renderizar resultados
     renderSongs(searchResults);
@@ -268,26 +387,38 @@ function renderSongs(songList) {
     }
 }
 
-// Renderizar canciones en formato grid
+// SISTEMA DE FAVORITOS: Renderizar canciones en formato grid CON BOTONES DE FAVORITO
 function renderSongsGrid(songList) {
     songsGrid.innerHTML = '';
     songsList.style.display = 'none';
     songsGrid.style.display = 'grid';
     
     if (songList.length === 0) {
-        songsGrid.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #b3b3b3;">
-                <i class="fas fa-music" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                <h3>${isSearching ? 'No se encontraron canciones' : 'No hay canciones en este género'}</h3>
-                <p>${isSearching ? 'Intenta con otra búsqueda' : 'Agrega canciones manualmente'}</p>
-            </div>
-        `;
+        // Mensaje especial para Favoritos vacíos
+        if (isViewingFavorites) {
+            songsGrid.innerHTML = `
+                <div class="empty-favorites">
+                    <i class="fas fa-heart"></i>
+                    <h3>Tus Favoritos están vacíos</h3>
+                    <p>Añade canciones a tus favoritos haciendo clic en el corazón ❤️</p>
+                </div>
+            `;
+        } else {
+            songsGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #b3b3b3;">
+                    <i class="fas fa-music" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h3>${isSearching ? 'No se encontraron canciones' : 'No hay canciones en este género'}</h3>
+                    <p>${isSearching ? 'Intenta con otra búsqueda' : 'Agrega canciones manualmente'}</p>
+                </div>
+            `;
+        }
         return;
     }
     
     songList.forEach((song, index) => {
         const songElement = document.createElement('div');
         const isCurrentSong = songs[currentSongIndex] && song.id === songs[currentSongIndex].id;
+        const isFav = isFavorite(song.id);
         
         songElement.className = `song-card ${isCurrentSong && isPlaying ? 'playing' : ''}`;
         songElement.dataset.index = index;
@@ -304,6 +435,10 @@ function renderSongsGrid(songList) {
                         <div class="wave-bar"></div>
                     </div>
                 ` : ''}
+                <!-- BOTÓN DE FAVORITO EN GRID -->
+                <button class="favorite-btn-grid ${isFav ? 'favorite' : ''}" data-song-id="${song.id}">
+                    <i class="fas fa-heart"></i>
+                </button>
             </div>
             <div class="song-info">
                 <h4>${song.title}</h4>
@@ -311,37 +446,70 @@ function renderSongsGrid(songList) {
             </div>
         `;
         
-        songElement.addEventListener('click', function() {
-            const songIndexInAll = songs.findIndex(s => s.id === song.id);
-            if (songIndexInAll !== -1) {
-                playSong(songIndexInAll);
+        // Evento para reproducir canción
+        songElement.addEventListener('click', function(e) {
+            // No reproducir si hicieron clic en el botón de favorito
+            if (!e.target.closest('.favorite-btn-grid')) {
+                const songIndexInAll = songs.findIndex(s => s.id === song.id);
+                if (songIndexInAll !== -1) {
+                    playSong(songIndexInAll);
+                }
             }
+        });
+        
+        // Evento para botón de favorito
+        const favBtn = songElement.querySelector('.favorite-btn-grid');
+        favBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Evitar que se reproduzca la canción
+            const songId = parseInt(this.dataset.songId);
+            toggleFavorite(songId);
+            
+            // Actualizar visualmente
+            this.classList.toggle('favorite');
+            this.classList.add('heart-beat');
+            
+            // Remover clase de animación después de que termine
+            setTimeout(() => {
+                this.classList.remove('heart-beat');
+            }, 600);
         });
         
         songsGrid.appendChild(songElement);
     });
 }
 
-// Renderizar canciones en formato lista
+// SISTEMA DE FAVORITOS: Renderizar canciones en formato lista CON BOTONES DE FAVORITO
 function renderSongsList(songList) {
     songsList.innerHTML = '';
     songsGrid.style.display = 'none';
     songsList.style.display = 'block';
     
     if (songList.length === 0) {
-        songsList.innerHTML = `
-            <div style="text-align: center; padding: 40px; color: #b3b3b3;">
-                <i class="fas fa-music" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                <h3>${isSearching ? 'No se encontraron canciones' : 'No hay canciones en este género'}</h3>
-                <p>${isSearching ? 'Intenta con otra búsqueda' : 'Agrega canciones manualmente'}</p>
-            </div>
-        `;
+        // Mensaje especial para Favoritos vacíos
+        if (isViewingFavorites) {
+            songsList.innerHTML = `
+                <div class="empty-favorites" style="text-align: center; padding: 60px 40px;">
+                    <i class="fas fa-heart" style="font-size: 64px; margin-bottom: 20px; opacity: 0.5; color: #EF476F;"></i>
+                    <h3 style="font-size: 20px; margin-bottom: 10px;">Tus Favoritos están vacíos</h3>
+                    <p style="font-size: 14px; max-width: 300px; margin: 0 auto; line-height: 1.5;">Añade canciones a tus favoritos haciendo clic en el corazón ❤️</p>
+                </div>
+            `;
+        } else {
+            songsList.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #b3b3b3;">
+                    <i class="fas fa-music" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h3>${isSearching ? 'No se encontraron canciones' : 'No hay canciones en este género'}</h3>
+                    <p>${isSearching ? 'Intenta con otra búsqueda' : 'Agrega canciones manualmente'}</p>
+                </div>
+            `;
+        }
         return;
     }
     
     songList.forEach((song, index) => {
         const songElement = document.createElement('div');
         const isCurrentSong = songs[currentSongIndex] && song.id === songs[currentSongIndex].id;
+        const isFav = isFavorite(song.id);
         
         songElement.className = `song-item ${isCurrentSong && isPlaying ? 'playing' : ''}`;
         songElement.dataset.index = index;
@@ -353,16 +521,38 @@ function renderSongsList(songList) {
                 <p>${song.artist}</p>
             </div>
             <div class="song-duration">${song.duration}</div>
+            <!-- BOTÓN DE FAVORITO EN LISTA -->
+            <button class="favorite-btn-list ${isFav ? 'favorite' : ''}" data-song-id="${song.id}">
+                <i class="fas fa-heart"></i>
+            </button>
             <i class="fas fa-ellipsis-h" style="color: #b3b3b3;"></i>
         `;
         
+        // Evento para reproducir canción
         songElement.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('fa-ellipsis-h')) {
+            if (!e.target.closest('.favorite-btn-list') && !e.target.classList.contains('fa-ellipsis-h')) {
                 const songIndexInAll = songs.findIndex(s => s.id === song.id);
                 if (songIndexInAll !== -1) {
                     playSong(songIndexInAll);
                 }
             }
+        });
+        
+        // Evento para botón de favorito
+        const favBtn = songElement.querySelector('.favorite-btn-list');
+        favBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Evitar que se reproduzca la canción
+            const songId = parseInt(this.dataset.songId);
+            toggleFavorite(songId);
+            
+            // Actualizar visualmente
+            this.classList.toggle('favorite');
+            this.classList.add('heart-beat');
+            
+            // Remover clase de animación después de que termine
+            setTimeout(() => {
+                this.classList.remove('heart-beat');
+            }, 600);
         });
         
         songsList.appendChild(songElement);
@@ -461,19 +651,12 @@ function updatePlayingUI() {
     // Agregar clase 'playing' a la canción actual si está reproduciéndose
     if (isPlaying && songs[currentSongIndex]) {
         const currentSongId = songs[currentSongIndex].id;
+        const currentSongList = getCurrentSongList();
         
         // Para vista grid
         document.querySelectorAll('.song-card').forEach(card => {
             const songIndex = parseInt(card.dataset.index);
-            const songList = isSearching ? 
-                songs.filter(song => 
-                    song.title.toLowerCase().includes(currentSearchQuery) ||
-                    song.artist.toLowerCase().includes(currentSearchQuery) ||
-                    song.genre.toLowerCase().includes(currentSearchQuery)
-                ) : 
-                songs.filter(song => song.genre === currentGenre);
-            
-            if (songList[songIndex] && songList[songIndex].id === currentSongId) {
+            if (currentSongList[songIndex] && currentSongList[songIndex].id === currentSongId) {
                 card.classList.add('playing');
             }
         });
@@ -481,29 +664,14 @@ function updatePlayingUI() {
         // Para vista lista
         document.querySelectorAll('.song-item').forEach(item => {
             const songIndex = parseInt(item.dataset.index);
-            const songList = isSearching ? 
-                songs.filter(song => 
-                    song.title.toLowerCase().includes(currentSearchQuery) ||
-                    song.artist.toLowerCase().includes(currentSearchQuery) ||
-                    song.genre.toLowerCase().includes(currentSearchQuery)
-                ) : 
-                songs.filter(song => song.genre === currentGenre);
-            
-            if (songList[songIndex] && songList[songIndex].id === currentSongId) {
+            if (currentSongList[songIndex] && currentSongList[songIndex].id === currentSongId) {
                 item.classList.add('playing');
             }
         });
     }
     
     // Actualizar el reproductor
-    renderSongs(isSearching ? 
-        songs.filter(song => 
-            song.title.toLowerCase().includes(currentSearchQuery) ||
-            song.artist.toLowerCase().includes(currentSearchQuery) ||
-            song.genre.toLowerCase().includes(currentSearchQuery)
-        ) : 
-        songs.filter(song => song.genre === currentGenre)
-    );
+    renderSongs(getCurrentSongList());
 }
 
 // Función para mostrar notificación
@@ -512,7 +680,9 @@ function showNotification(message, type = "success") {
     const notification = document.createElement('div');
     
     // Configurar colores según el tipo
-    const bgColor = type === "success" ? "#1DB954" : "#FF6B6B";
+    const bgColor = type === "success" ? "#1DB954" : 
+                   type === "error" ? "#FF6B6B" : 
+                   type === "info" ? "#118AB2" : "#1DB954";
     const textColor = type === "success" ? "#000" : "#FFF";
     
     notification.style.cssText = `
@@ -598,14 +768,7 @@ function setupEventListeners() {
             isGridView = true;
             gridViewBtn.classList.add('active');
             listViewBtn.classList.remove('active');
-            renderSongs(isSearching ? 
-                songs.filter(song => 
-                    song.title.toLowerCase().includes(currentSearchQuery) ||
-                    song.artist.toLowerCase().includes(currentSearchQuery) ||
-                    song.genre.toLowerCase().includes(currentSearchQuery)
-                ) : 
-                songs.filter(song => song.genre === currentGenre)
-            );
+            renderSongs(getCurrentSongList());
         }
     });
 
@@ -614,14 +777,7 @@ function setupEventListeners() {
             isGridView = false;
             listViewBtn.classList.add('active');
             gridViewBtn.classList.remove('active');
-            renderSongs(isSearching ? 
-                songs.filter(song => 
-                    song.title.toLowerCase().includes(currentSearchQuery) ||
-                    song.artist.toLowerCase().includes(currentSearchQuery) ||
-                    song.genre.toLowerCase().includes(currentSearchQuery)
-                ) : 
-                songs.filter(song => song.genre === currentGenre)
-            );
+            renderSongs(getCurrentSongList());
         }
     });
 
@@ -634,6 +790,7 @@ function setupEventListeners() {
         } else {
             clearSearchBtn.classList.remove('visible');
             isSearching = false;
+            isViewingFavorites = false;
             searchResultsInfo.classList.add('hidden');
             loadGenre(currentGenre);
         }
@@ -644,6 +801,7 @@ function setupEventListeners() {
         searchInput.value = '';
         clearSearchBtn.classList.remove('visible');
         isSearching = false;
+        isViewingFavorites = false;
         currentSearchQuery = '';
         searchResultsInfo.classList.add('hidden');
         loadGenre(currentGenre);
@@ -661,6 +819,7 @@ function setupEventListeners() {
         
         // Volver al género actual
         isSearching = false;
+        isViewingFavorites = false;
         currentSearchQuery = '';
         searchInput.value = '';
         clearSearchBtn.classList.remove('visible');
@@ -692,16 +851,21 @@ function setupEventListeners() {
         
         // Mostrar todas las canciones
         isSearching = false;
+        isViewingFavorites = false;
         currentSearchQuery = '';
         searchInput.value = '';
         clearSearchBtn.classList.remove('visible');
         searchResultsInfo.classList.add('hidden');
         
+        // CORRECCIÓN: Banner para "Todas las canciones"
         currentGenreName.textContent = 'Todas las canciones';
         currentGenreCount.textContent = `${songs.length} canciones`;
-        genreBanner.style.background = `linear-gradient(135deg, #1DB95440, #1DB95480)`;
+        genreBanner.style.background = `
+            linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+            url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80') center/cover
+        `;
         genreBannerIcon.innerHTML = `<i class="fas fa-music"></i>`;
-        genreBannerIcon.style.color = '#1DB954';
+        genreBannerIcon.style.color = '#FFFFFF';
         
         // Mostrar todas las canciones
         renderSongs(songs);
@@ -721,8 +885,8 @@ function setupEventListeners() {
 // Instrucciones iniciales
 setTimeout(() => {
     if (songs.filter(s => s.genre === currentGenre).length === 0) {
-        showNotification("¡Bienvenido a tu Spotify! Usa la barra de búsqueda para encontrar canciones", "info");
+        showNotification("¡Bienvenido a tu Spotify! Haz clic en ❤️ para añadir canciones a Favoritos", "info");
     }
-
 }, 1500);
+
 

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mi Spotify</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fab fa-spotify"></i>
+            <h1>Mi Spotify</h1>
+        </div>
+        <div class="search-container" id="search-container">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Buscar canciones...">
+                <button id="clear-search" class="clear-search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="view-toggle">
+            <button id="grid-view" class="active">
+                <i class="fas fa-th"></i>
+            </button>
+            <button id="list-view">
+                <i class="fas fa-list"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Layout principal -->
+    <div class="container">
+        <!-- Sidebar de géneros -->
+        <div class="genres-sidebar" id="genres-sidebar">
+            <!-- Los géneros se cargarán con JavaScript -->
+        </div>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Banner del género -->
+            <div class="genre-banner" id="genre-banner">
+                <div class="genre-banner-icon" id="genre-banner-icon">
+                    <i class="fas fa-music"></i>
+                </div>
+                <div class="genre-banner-info">
+                    <h2 id="current-genre-name">Selecciona un género</h2>
+                    <p id="current-genre-count">0 canciones</p>
+                </div>
+            </div>
+
+            <!-- Grid de canciones -->
+            <div class="songs-grid" id="songs-grid">
+                <!-- Las canciones se cargarán aquí -->
+            </div>
+
+            <!-- Lista de canciones (alternativa) -->
+            <div class="songs-list" id="songs-list">
+                <!-- Las canciones en formato lista se cargarán aquí -->
+            </div>
+
+            <!-- Mensaje de búsqueda -->
+            <div class="search-results-info hidden" id="search-results-info">
+                <h3>Resultados de búsqueda</h3>
+                <p id="search-results-count">0 canciones encontradas</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Player móvil -->
+    <div class="mobile-player hidden" id="mobile-player">
+        <div class="player-song-info">
+            <h4 id="player-song-title">No hay canción reproduciéndose</h4>
+            <p id="player-song-artist">Selecciona una canción</p>
+        </div>
+        <div class="player-controls">
+            <button id="prev-btn"><i class="fas fa-step-backward"></i></button>
+            <button class="play-btn" id="play-pause-btn">
+                <i class="fas fa-play"></i>
+            </button>
+            <button id="next-btn"><i class="fas fa-step-forward"></i></button>
+        </div>
+    </div>
+
+    <!-- Navegación inferior -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" id="home-btn">
+            <i class="fas fa-home"></i>
+            <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item" id="search-nav-btn">
+            <i class="fas fa-search"></i>
+            <span>Buscar</span>
+        </a>
+        <a href="#" class="nav-item" id="library-btn">
+            <i class="fas fa-music"></i>
+            <span>Biblioteca</span>
+        </a>
+    </nav>
+
+    <!-- Enlace al archivo JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

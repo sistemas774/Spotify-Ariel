@@ -84,6 +84,24 @@ let songs = [
         duration: "3:24",
         url: "https://docs.google.com/uc?export=download&id=1gC2Qd3C9T641ykLlmJeBAhLr3zotKdUm",
         image: "https://i.ibb.co/BHjjTdX4/Tatoo.jpg"
+    },
+    {
+        id: 2,
+        title: "Roses x Children (Remix)",
+        artist: "Remix",
+        genre: "dance",
+        duration: "3:24",
+        url: "https://docs.google.com/uc?export=download&id=1zcrsNny-3WT6f5pzNVvHNHyEoi4GoNpf",
+        image: "https://i.ibb.co/Q3JBg0Hq/Roses-x-Children-Remix.jpg"
+    },
+    {
+        id: 2,
+        title: "What Is Love (Techno Version)",
+        artist: "Remix",
+        genre: "dance",
+        duration: "3:24",
+        url: "https://docs.google.com/uc?export=download&id=11LG6in7sc2wgogl5280civ4sa87JIdhV",
+        image: "https://i.ibb.co/hx7VRJkP/What-Is-Love-Techno-Version.jpg"
     }
 ];
 
@@ -705,4 +723,5 @@ setTimeout(() => {
     if (songs.filter(s => s.genre === currentGenre).length === 0) {
         showNotification("¡Bienvenido a tu Spotify! Usa la barra de búsqueda para encontrar canciones", "info");
     }
+
 }, 1500);

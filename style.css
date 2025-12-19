@@ -181,7 +181,7 @@ body {
     width: calc(100% - 80px);
 }
 
-/* Banner del género seleccionado - VERSIÓN CORREGIDA CON IMÁGENES */
+/* Banner del género seleccionado - VERSIÓN CORREGIDA (OPACIDAD 0.3) */
 .genre-banner {
     background: linear-gradient(135deg, #450af5, #c4efd9);
     border-radius: 12px;
@@ -198,7 +198,7 @@ body {
     position: relative;
 }
 
-/* Overlay para mejor legibilidad sobre imágenes */
+/* OVERLAY CORREGIDO: Opacidad 0.3 (balance ideal) */
 .genre-banner::before {
     content: '';
     position: absolute;
@@ -206,7 +206,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8));
+    background: rgba(0, 0, 0, 0.3); /* 0.3 = BALANCE IDEAL */
     border-radius: 12px;
     z-index: 1;
 }
@@ -672,7 +672,11 @@ body {
     animation: heartBeat 0.6s ease;
 }
 
-/* Responsive */
+/* =========================================== */
+/* RESPONSIVE DESIGN */
+/* =========================================== */
+
+/* Para móviles: ajustar opacidad del banner */
 @media (max-width: 768px) {
     .songs-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -709,6 +713,11 @@ body {
     
     .genre-banner-info h2 {
         font-size: 24px;
+    }
+    
+    /* Opacidad más clara en tablet */
+    .genre-banner::before {
+        background: rgba(0, 0, 0, 0.25);
     }
 }
 
@@ -755,6 +764,11 @@ body {
     .genre-banner-info p {
         font-size: 12px;
     }
+    
+    /* Opacidad aún más clara en móvil */
+    .genre-banner::before {
+        background: rgba(0, 0, 0, 0.2);
+    }
 }
 
 /* Para pantallas muy pequeñas */
@@ -797,3 +811,4 @@ body {
         max-width: 120px;
     }
 }
+

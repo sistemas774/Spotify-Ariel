@@ -86,7 +86,7 @@ let songs = [
         image: "https://i.ibb.co/BHjjTdX4/Tatoo.jpg"
     },
     {
-        id: 2,
+        id: 3,
         title: "Roses x Children (Remix)",
         artist: "Remix",
         genre: "dance",
@@ -95,7 +95,7 @@ let songs = [
         image: "https://i.ibb.co/Q3JBg0Hq/Roses-x-Children-Remix.jpg"
     },
     {
-        id: 2,
+        id: 4,
         title: "What Is Love (Techno Version)",
         artist: "Remix",
         genre: "dance",
@@ -725,3 +725,4 @@ setTimeout(() => {
     }
 
 }, 1500);
+

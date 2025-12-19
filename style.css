@@ -103,7 +103,7 @@ body {
     min-height: 100vh;
 }
 
-/* Sidebar de géneros/carpetas */
+/* Sidebar de géneros/carpetas CON FAVORITOS */
 .genres-sidebar {
     width: 80px;
     background-color: #000;
@@ -145,6 +145,23 @@ body {
     color: #fff;
 }
 
+/* ESTILO ESPECIAL PARA FAVORITOS */
+.genre-item.favorites {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+}
+
+.genre-item.favorites.active {
+    background-color: #1DB954;
+    color: #000;
+}
+
+.genre-item.favorites:hover {
+    background-color: #1DB954;
+    color: #000;
+}
+
 .genre-icon {
     font-size: 24px;
     margin-bottom: 5px;
@@ -164,7 +181,7 @@ body {
     width: calc(100% - 80px);
 }
 
-/* Banner del género seleccionado */
+/* Banner del género seleccionado - VERSIÓN CORREGIDA CON IMÁGENES */
 .genre-banner {
     background: linear-gradient(135deg, #450af5, #c4efd9);
     border-radius: 12px;
@@ -173,32 +190,62 @@ body {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
+    /* Propiedades para imágenes de fondo */
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    min-height: 180px;
+    position: relative;
+}
+
+/* Overlay para mejor legibilidad sobre imágenes */
+.genre-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8));
+    border-radius: 12px;
+    z-index: 1;
 }
 
 .genre-banner-icon {
     font-size: 48px;
     margin-right: 20px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.5);
     width: 80px;
     height: 80px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 2;
+    backdrop-filter: blur(5px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.genre-banner-info {
+    position: relative;
+    z-index: 2;
 }
 
 .genre-banner-info h2 {
     font-size: 32px;
     margin-bottom: 5px;
     font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .genre-banner-info p {
     font-size: 14px;
     opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-/* Grid de canciones */
+/* Grid de canciones CON BOTÓN DE FAVORITOS */
 .songs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -212,6 +259,7 @@ body {
     padding: 16px;
     transition: background-color 0.3s;
     cursor: pointer;
+    position: relative;
 }
 
 .song-card:hover {
@@ -235,12 +283,49 @@ body {
     font-size: 40px;
     color: #1DB954;
     overflow: hidden;
+    position: relative;
 }
 
 .song-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* BOTÓN DE FAVORITO EN GRID */
+.favorite-btn-grid {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.2s;
+}
+
+.favorite-btn-grid:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+}
+
+.favorite-btn-grid i {
+    color: #fff;
+    font-size: 14px;
+}
+
+.favorite-btn-grid.favorite i {
+    color: #1DB954;
+}
+
+.favorite-btn-grid:hover i {
+    color: #1DB954;
 }
 
 .song-info h4 {
@@ -259,7 +344,7 @@ body {
     text-overflow: ellipsis;
 }
 
-/* Lista de canciones (alternativa) */
+/* Lista de canciones (alternativa) CON BOTÓN DE FAVORITOS */
 .songs-list {
     display: none;
 }
@@ -282,6 +367,27 @@ body {
 .song-item.playing {
     background-color: rgba(29, 185, 84, 0.15);
     border-left: 4px solid #1DB954;
+}
+
+/* BOTÓN DE FAVORITO EN LISTA */
+.favorite-btn-list {
+    position: absolute;
+    right: 40px;
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 8px;
+    transition: all 0.2s;
+}
+
+.favorite-btn-list:hover {
+    color: #1DB954;
+    transform: scale(1.1);
+}
+
+.favorite-btn-list.favorite i {
+    color: #1DB954;
 }
 
 /* Ondas musicales para canción en reproducción */
@@ -335,11 +441,14 @@ body {
 
 .song-info-list {
     flex: 1;
+    margin-left: 10px;
 }
 
 .song-info-list h4 {
     font-size: 16px;
     margin-bottom: 4px;
+    display: flex;
+    align-items: center;
 }
 
 .song-info-list p {
@@ -507,6 +616,33 @@ body {
     display: none;
 }
 
+/* Mensaje especial para Favoritos vacíos */
+.empty-favorites {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 40px;
+    color: #b3b3b3;
+}
+
+.empty-favorites i {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+    color: #1DB954;
+}
+
+.empty-favorites h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.empty-favorites p {
+    font-size: 14px;
+    max-width: 300px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
 /* Clase hidden */
 .hidden {
     display: none !important;
@@ -523,6 +659,19 @@ body {
     to { transform: translateX(100%); opacity: 0; }
 }
 
+/* Animación para el corazón */
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.2); }
+    50% { transform: scale(0.9); }
+    75% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.heart-beat {
+    animation: heartBeat 0.6s ease;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .songs-grid {
@@ -532,15 +681,34 @@ body {
     
     .genre-banner {
         padding: 20px;
+        flex-direction: column;
+        text-align: center;
+        min-height: 160px;
     }
     
     .genre-banner h2 {
         font-size: 24px;
     }
     
+    .genre-banner-icon {
+        margin-right: 0;
+        margin-bottom: 15px;
+        width: 60px;
+        height: 60px;
+        font-size: 32px;
+    }
+    
     .search-container {
         max-width: 250px;
         margin: 0 10px;
+    }
+    
+    .genre-banner-info {
+        text-align: center;
+    }
+    
+    .genre-banner-info h2 {
+        font-size: 24px;
     }
 }
 
@@ -559,14 +727,12 @@ body {
     }
     
     .genre-banner {
-        flex-direction: column;
-        text-align: center;
         padding: 20px 15px;
+        min-height: 140px;
     }
     
     .genre-banner-icon {
-        margin-right: 0;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
     
     .search-container {
@@ -576,5 +742,58 @@ body {
     
     .search-bar input {
         font-size: 12px;
+    }
+    
+    .favorite-btn-list {
+        right: 30px;
+    }
+    
+    .genre-banner-info h2 {
+        font-size: 20px;
+    }
+    
+    .genre-banner-info p {
+        font-size: 12px;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 360px) {
+    .genres-sidebar {
+        width: 60px;
+    }
+    
+    .main-content {
+        margin-left: 60px;
+        width: calc(100% - 60px);
+        padding: 15px 10px 15px;
+    }
+    
+    .songs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+    
+    .genre-banner {
+        padding: 15px 10px;
+        min-height: 120px;
+    }
+    
+    .genre-banner-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+    
+    .genre-banner-info h2 {
+        font-size: 18px;
+    }
+    
+    .logo h1 {
+        font-size: 16px;
+    }
+    
+    .search-container {
+        max-width: 120px;
     }
 }

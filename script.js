@@ -73,7 +73,7 @@ let songs = [
         artist: "Roxette",
         genre: "dance",
         duration: "3:53",
-        url: "http://192.168.0.200:8080/s/TMx3kMgwcLxWTt7",
+        url: "http://192.168.0.200:8080/remote.php/dav/files/roma/Mp3/Fading%20Like%20A%20Flower.mp3",
         image: "https://i.ibb.co/pjjFkKGx/Fading-Like-A-Flower.jpg"
     },
     {
@@ -888,6 +888,7 @@ setTimeout(() => {
         showNotification("¡Bienvenido a tu Spotify! Haz clic en ❤️ para añadir canciones a Favoritos", "info");
     }
 }, 1500);
+
 
 
 

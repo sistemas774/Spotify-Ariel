@@ -73,7 +73,7 @@ let songs = [
         artist: "Roxette",
         genre: "dance",
         duration: "3:53",
-        url: "https://docs.google.com/uc?export=download&id=1CR3KPFWew_ePi4E05P9Y3kO_KSUPRTKH",
+        url: "http://192.168.0.200:8080/s/TMx3kMgwcLxWTt7",
         image: "https://i.ibb.co/pjjFkKGx/Fading-Like-A-Flower.jpg"
     },
     {
@@ -82,7 +82,7 @@ let songs = [
         artist: "Loreen",
         genre: "dance",
         duration: "3:24",
-        url: "https://docs.google.com/uc?export=download&id=1gC2Qd3C9T641ykLlmJeBAhLr3zotKdUm",
+        url: "http://192.168.0.200:8080/s/dG45oagMWDMKSQS",
         image: "https://i.ibb.co/BHjjTdX4/Tatoo.jpg"
     },
     {
@@ -91,7 +91,7 @@ let songs = [
         artist: "Remix",
         genre: "dance",
         duration: "3:24",
-        url: "https://docs.google.com/uc?export=download&id=1zcrsNny-3WT6f5pzNVvHNHyEoi4GoNpf",
+        url: "http://192.168.0.200:8080/s/gsnzoQxnH6wLffZ",
         image: "https://i.ibb.co/Q3JBg0Hq/Roses-x-Children-Remix.jpg"
     },
     {
@@ -100,7 +100,7 @@ let songs = [
         artist: "Remix",
         genre: "dance",
         duration: "3:24",
-        url: "https://docs.google.com/uc?export=download&id=11LG6in7sc2wgogl5280civ4sa87JIdhV",
+        url: "http://192.168.0.200:8080/s/SoKN7kd498BPNGe",
         image: "https://i.ibb.co/hx7VRJkP/What-Is-Love-Techno-Version.jpg"
     }
 ];
@@ -888,5 +888,6 @@ setTimeout(() => {
         showNotification("¡Bienvenido a tu Spotify! Haz clic en ❤️ para añadir canciones a Favoritos", "info");
     }
 }, 1500);
+
 
 
